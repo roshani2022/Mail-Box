@@ -1,0 +1,22 @@
+.card{
+    display: flex;
+    width: 25rem;
+    margin: auto;
+    margin-top: 8rem;
+    justify-content: space-between;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.26);
+}
+.form{
+    margin-bottom: 1.5rem;
+    justify-content: space-around;  
+}
+
+.form input{
+    margin-bottom: 1.5rem;
+}
+
+.form button{
+    border-radius: 3rem;
+    width: 14rem;
+}
+
