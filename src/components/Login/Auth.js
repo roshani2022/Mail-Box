@@ -65,7 +65,7 @@ const Auth = () => {
       if (isLogin) {
         const data = await res.json();
         console.log(data)
-        dispatch(authActions.login( {idToken: data.idToken}));
+        dispatch(authActions.login( {idToken: data.idToken,email:email}));
         history.replace("/Welcome");
         console.log("Login Sucessfully");
       } else {
