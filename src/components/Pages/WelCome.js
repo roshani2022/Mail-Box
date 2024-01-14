@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Button, Container, Modal, Form, InputGroup } from "react-bootstrap";
+import { Button, Container, Form, InputGroup, Modal } from "react-bootstrap";
 import classes from "./Welcome.module.css";
 import { authActions } from "../../store/auth-slice";
 import { useDispatch, useSelector } from "react-redux";
@@ -7,7 +7,6 @@ import { useHistory } from "react-router-dom";
 import { Editor } from "react-draft-wysiwyg";
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 
-import SideBar from "../SideBar/SideBar";
 
 const Welcome = () => {
   const history = useHistory();
@@ -44,9 +43,10 @@ const Welcome = () => {
     setShow(false);
 
     const composeEmail = {
-      email,
-      sub,
-      description,
+      to: email,
+      sub: sub,
+      description: description,
+      date: new Date(),
     };
 
     console.log(composeEmail);
@@ -67,6 +67,36 @@ const Welcome = () => {
         );
         if (res.ok) {
           alert("Mail Compose Successfuly");
+         
+        } else {
+          const data = await res.json();
+          console.log(data);
+        }
+      } catch (error) {
+        console.log(error);
+      }
+
+      const recieveEmail = {
+        from: sentEmail,
+        sub: sub,
+        description: description,
+        date: new Date(),
+      };
+
+      const recievedEmail = email.replace(/[.@]/g, "");
+      try {
+        const res = await fetch(
+          `https://mail-box-a393b-default-rtdb.firebaseio.com/${recievedEmail}/RecieveEmail.json`,
+          {
+            method: "POST",
+            body: JSON.stringify({ ...recieveEmail }),
+            headers: {
+              "content-type": "application/json",
+            },
+          }
+        );
+        if (res.ok) {
+          alert("Mail Recive Successfuly");
         } else {
           const data = await res.json();
           console.log(data);
@@ -82,18 +112,17 @@ const Welcome = () => {
   };
 
   return (
-    <Container fluid>
+    <Container fluid  >
       <header className={classes.header}>
         Welcome To Your MailBox!!!
         <Button onClick={() => logoutHandler()}>Logout</Button>
       </header>
-      <Button className="mt-2" onClick={showComposeBox}>
+      <Button className="mt-3 mb-2" onClick={showComposeBox}>
         Compose
       </Button>
-      <SideBar />
       <main>
         <Container className="d-flex flex-column align-items-center w-600px mt-5">
-          <Modal show={show} onHide={handleClose} size="lg">
+          <Modal show={show} onHide={handleClose}  style={{marginTop:"210px",marginLeft:"700px",width:"700px"}} >
             <Modal.Header
               closeButton
               style={{ fontSize: "10px", padding: "5px" }}
@@ -109,11 +138,11 @@ const Welcome = () => {
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  style={{ border: "none", borderBottom: "1px solid #ccc" }}
+                 
                 />
               </InputGroup>
-              <InputGroup controlId="formSubject">
-              <InputGroup.Text id="basic-addon2">Subject</InputGroup.Text>
+              <InputGroup >
+                <InputGroup.Text id="basic-addon2">Subject</InputGroup.Text>
                 <Form.Control
                   type="text"
                   placeholder="subject"
@@ -121,18 +150,18 @@ const Welcome = () => {
                   aria-describedby="basic-addon2"
                   value={sub}
                   onChange={(e) => setSub(e.target.value)}
-                  style={{ border: "none", borderBottom: "1px solid #ccc" }}
+                 
                 />
               </InputGroup>
-              <InputGroup className="mb-3" controlId="textArea">
-                <Editor
-                  value={description}
-                  toolbarClassName="toolbarClassName"
-                  wrapperClassName="wrapperClassName"
-                  editorClassName="editorClassName"
-                  onChange={onEditorStateChange}
-                />
-              </InputGroup>
+
+              <Editor
+                value={description}
+                toolbarClassName="toolbarClassName"
+                wrapperClassName="wrapperClassName"
+                editorClassName="editorClassName"
+                onChange={onEditorStateChange}
+              />
+
               <Modal.Footer>
                 <Button variant="primary" type="submit" className="mb-1 ms-1">
                   Send

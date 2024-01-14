@@ -14,7 +14,7 @@
     "react-bootstrap": "^2.9.2",
     "react-dom": "^18.2.0",
     "react-draft-wysiwyg": "^1.15.0",
-    "react-icon": "^1.0.0",
+   
     "react-redux": "^9.0.4",
     "react-router-dom": "^5.3.4",
     "react-scripts": "5.0.1",

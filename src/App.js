@@ -5,6 +5,7 @@ import Root from "./components/layout/Root";
 import { Switch } from "react-router-dom/";
 import Inbox from "./components/SideBar/Inbox";
 import SentMail from "./components/SideBar/SentMail";
+import './App.css'
 
 function App() {
   return (
