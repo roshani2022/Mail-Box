@@ -1,15 +1,25 @@
 import React from "react";
-import { Card, ListGroup } from "react-bootstrap";
+import { Card, ListGroup,Badge } from "react-bootstrap";
 import { Link } from "react-router-dom";
-import  classes from"./SideBar.module.css"
+import  classes from "./SideBar.module.css";
+import { useSelector } from "react-redux";
+import { BsPlus } from "react-icons/bs";
+
 
 const SideBar = () => {
+  const unreadMessagesCount = useSelector((state) => state.inbox.unreadMessagesCount);
   return (
     <Card className={classes.card}>
       <Card.Body>
         <ListGroup variant="flush">
           <ListGroup.Item>
-            <Link to="/Inbox">Inbox</Link>
+            <Link to="/Inbox">Inbox
+            {unreadMessagesCount >= 0 && (
+                <Badge variant="primary" style={{marginLeft:"12px"}}>
+                  {unreadMessagesCount}{<BsPlus style={{marginLeft:"1px",color:"white",fontSize:"15px"}} />}
+                </Badge>
+              )}
+            </Link>
           </ListGroup.Item>
           <ListGroup.Item>
             <Link to="/Unread">Unread</Link>

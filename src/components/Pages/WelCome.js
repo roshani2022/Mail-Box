@@ -7,7 +7,6 @@ import { useHistory } from "react-router-dom";
 import { Editor } from "react-draft-wysiwyg";
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 
-
 const Welcome = () => {
   const history = useHistory();
   const dispatch = useDispatch();
@@ -47,6 +46,7 @@ const Welcome = () => {
       sub: sub,
       description: description,
       date: new Date(),
+     
     };
 
     console.log(composeEmail);
@@ -67,7 +67,6 @@ const Welcome = () => {
         );
         if (res.ok) {
           alert("Mail Compose Successfuly");
-         
         } else {
           const data = await res.json();
           console.log(data);
@@ -81,6 +80,7 @@ const Welcome = () => {
         sub: sub,
         description: description,
         date: new Date(),
+        unRead:true,
       };
 
       const recievedEmail = email.replace(/[.@]/g, "");
@@ -112,7 +112,7 @@ const Welcome = () => {
   };
 
   return (
-    <Container fluid  >
+    <Container fluid>
       <header className={classes.header}>
         Welcome To Your MailBox!!!
         <Button onClick={() => logoutHandler()}>Logout</Button>
@@ -122,7 +122,11 @@ const Welcome = () => {
       </Button>
       <main>
         <Container className="d-flex flex-column align-items-center w-600px mt-5">
-          <Modal show={show} onHide={handleClose}  style={{marginTop:"210px",marginLeft:"700px",width:"700px"}} >
+          <Modal
+            show={show}
+            onHide={handleClose}
+            style={{ marginTop: "210px", marginLeft: "700px", width: "700px" }}
+          >
             <Modal.Header
               closeButton
               style={{ fontSize: "10px", padding: "5px" }}
@@ -138,10 +142,9 @@ const Welcome = () => {
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                 
                 />
               </InputGroup>
-              <InputGroup >
+              <InputGroup>
                 <InputGroup.Text id="basic-addon2">Subject</InputGroup.Text>
                 <Form.Control
                   type="text"
@@ -150,17 +153,18 @@ const Welcome = () => {
                   aria-describedby="basic-addon2"
                   value={sub}
                   onChange={(e) => setSub(e.target.value)}
-                 
                 />
               </InputGroup>
 
-              <Editor
-                value={description}
-                toolbarClassName="toolbarClassName"
-                wrapperClassName="wrapperClassName"
-                editorClassName="editorClassName"
-                onChange={onEditorStateChange}
-              />
+              <div style={{ height: "200px", overflowY: "auto" }}>
+                <Editor
+                  value={description}
+                  toolbarClassName="toolbarClassName"
+                  wrapperClassName="wrapperClassName"
+                  editorClassName="editorClassName"
+                  onChange={onEditorStateChange}
+                />
+              </div>
 
               <Modal.Footer>
                 <Button variant="primary" type="submit" className="mb-1 ms-1">

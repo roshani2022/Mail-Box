@@ -5,6 +5,7 @@ import Root from "./components/layout/Root";
 import { Switch } from "react-router-dom/";
 import Inbox from "./components/SideBar/Inbox";
 import SentMail from "./components/SideBar/SentMail";
+import Message from "./components/SideBar/Message";
 import './App.css'
 
 function App() {
@@ -20,6 +21,9 @@ function App() {
         </Route>
         <Route path="/SentMail">
           <SentMail />
+        </Route>
+        <Route path="/Message/:emailId" exact>
+          <Message />
         </Route>
         </Root>
       </Switch>
