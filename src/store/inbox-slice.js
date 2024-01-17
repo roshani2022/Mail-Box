@@ -22,6 +22,10 @@ const inboxSlice = createSlice({
           
           state.unreadMessagesCount -= 1;
         }
+       },
+       removeMessage(state,action){
+         state.inboxItem=state.inboxItem.filter((message)=>message.id !== action.payload)
+         state.unreadMessagesCount -= 1;
        }
     }
 
