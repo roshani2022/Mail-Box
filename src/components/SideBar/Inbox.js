@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect,useCallback } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { inboxActions } from "../../store/inbox-slice";
 import { Table, Form } from "react-bootstrap";
@@ -17,8 +17,8 @@ const Inbox = () => {
     dispatch(inboxActions.addItems([]));
   }, [receivedId, dispatch]);
 
-  useEffect(() => {
-    const fetchData = async () => {
+  
+    const fetchData = useCallback(async () => {
       try {
         const res = await fetch(
           `https://mail-box-a393b-default-rtdb.firebaseio.com//${receivedId}/RecieveEmail.json`
@@ -42,10 +42,20 @@ const Inbox = () => {
       } catch (error) {
         console.error("Error fetching received emails", error);
       }
-    };
+    },[dispatch,receivedId])
 
-    fetchData();
-  }, [receivedId, dispatch]);
+    
+    useEffect(()=>{
+         fetchData();
+         const intervalId = setInterval(()=>{
+           fetchData()
+           console.log('hello world')
+         },2000)
+         
+         return()=>clearInterval(intervalId)
+    },[receivedId,dispatch])
+
+   
 
   const openMessage = async (emailId) => {
     const email = inboxItem.find((item) => item.id === emailId);
@@ -57,6 +67,7 @@ const Inbox = () => {
       );
 
       dispatch(inboxActions.addItems(updatedItems));
+     
 
       try {
         const res = await fetch(
