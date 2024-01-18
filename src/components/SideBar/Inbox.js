@@ -81,7 +81,7 @@ const Inbox = () => {
       }
     }
 
-    history.replace(`/Message/${emailId}`);
+    history.replace(`/Message/inbox/${emailId}`);
   };
 
   const deleteMessage = async (emailId) => {

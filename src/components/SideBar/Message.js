@@ -9,10 +9,14 @@ import { TiArrowRightThick } from "react-icons/ti";
 import { BsThreeDots } from "react-icons/bs";
 
 const Message = () => {
-  const { emailId } = useParams();
-  const inboxItem = useSelector((state) => state.inbox.inboxItem);
-  const selectedMessage = inboxItem.find((message) => message.id === emailId);
-  console.log(selectedMessage)
+  const { emailId ,folder} = useParams();
+  const inboxMessages =  useSelector((state)=>state.inbox.inboxItem)
+  const sentMessages =  useSelector((state)=>state.sent.sentItem)
+  
+  const selectedMessage = folder === "inbox"
+    ? inboxMessages.find((message) => message.id === emailId)
+    : sentMessages.find((message) => message.id === emailId);
+  
 
   if (!selectedMessage) {
     return <p>Loading...</p>;

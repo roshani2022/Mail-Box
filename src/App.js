@@ -22,7 +22,7 @@ function App() {
         <Route path="/SentMail">
           <SentMail />
         </Route>
-        <Route path="/Message/:emailId" exact>
+        <Route  path="/Message/:folder/:emailId" exact>
           <Message />
         </Route>
         </Root>
