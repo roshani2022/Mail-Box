@@ -4,6 +4,7 @@ import { Table, Form } from "react-bootstrap";
 import { useHistory } from "react-router-dom";
 import { MdDelete } from "react-icons/md";
 import { sentActions } from "../../store/sent-slice";
+import useFetch from "../hook/useFetch";
 
 const SentMail = () => {
   const history = useHistory();
@@ -11,40 +12,28 @@ const SentMail = () => {
   const dispatch = useDispatch();
   const authEmail = useSelector((state) => state.auth.email);
   const sendId = authEmail.replace(/[.@]/g, "");
+  
 
   useEffect(() => {
     dispatch(sentActions.addItems([]));
   }, [sendId, dispatch]);
 
+  const { data } = useFetch(
+    `https://mail-box-a393b-default-rtdb.firebaseio.com//${sendId}/SenDEmail.json`
+  );
+
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const res = await fetch(
-          `https://mail-box-a393b-default-rtdb.firebaseio.com//${sendId}/SenDEmail.json`
-        );
+    if (data) {
+      const items = Object.entries(data).map(([id, innerData]) => ({
+        id,
+        ...innerData,
+      }));
 
-        if (res.ok) {
-          console.log("request sent successfully");
-          const data = await res.json();
-          console.log(data);
-
-          if (data) {
-            const items = Object.entries(data).map(([id, innerData]) => ({
-              id,
-              ...innerData,
-            }));
-            dispatch(sentActions.addItems(items));
-          }
-        } else {
-          console.log("Failed to fetch sent emails");
-        }
-      } catch (error) {
-        console.error("Error fetching to sent emails", error);
-      }
-    };
-
-    fetchData();
-  }, [sendId, dispatch]);
+      dispatch(sentActions.addItems(items));
+    } else {
+      alert("Failed to fetch sent Email");
+    }
+  }, [data, dispatch]);
 
   const openMessage = async (emailId) => {
     history.replace(`/Message/:folder/${emailId}`);

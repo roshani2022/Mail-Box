@@ -1,10 +1,11 @@
-import React, { useEffect,useCallback } from "react";
+import React, { useEffect} from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { inboxActions } from "../../store/inbox-slice";
 import { Table, Form } from "react-bootstrap";
 import { FaCircle } from "react-icons/fa";
 import { useHistory } from "react-router-dom";
 import { MdDelete } from "react-icons/md";
+import useFetch from "../hook/useFetch";
 
 const Inbox = () => {
   const history = useHistory();
@@ -12,50 +13,35 @@ const Inbox = () => {
   const dispatch = useDispatch();
   const authEmail = useSelector((state) => state.auth.email);
   const receivedId = authEmail.replace(/[.@]/g, "");
+  const unreadMessagesCount = useSelector((state) => state.inbox.unreadMessagesCount);
 
   useEffect(() => {
     dispatch(inboxActions.addItems([]));
   }, [receivedId, dispatch]);
 
+  const { data } = useFetch(
+    `https://mail-box-a393b-default-rtdb.firebaseio.com//${receivedId}/RecieveEmail.json`
+  );
+
+  useEffect(() => {
+    if (data) {
+      const items = Object.entries(data).map(([id, innerData]) => ({
+        id,
+        ...innerData,
+      }));
+
+      const intervalId = setInterval(() => {
+        dispatch(inboxActions.addItems(items));
+      
+      }, 2000);
+
+      return () => clearInterval(intervalId);
+    } else {
+      alert("Failed to fetch recieve Email");
+    }
+  }, [data, dispatch,unreadMessagesCount]);
+
   
-    const fetchData = useCallback(async () => {
-      try {
-        const res = await fetch(
-          `https://mail-box-a393b-default-rtdb.firebaseio.com//${receivedId}/RecieveEmail.json`
-        );
-
-        if (res.ok) {
-          console.log("request sent successfully");
-          const data = await res.json();
-          console.log(data);
-
-          if (data) {
-            const items = Object.entries(data).map(([id, innerData]) => ({
-              id,
-              ...innerData,
-            }));
-            dispatch(inboxActions.addItems(items));
-          }
-        } else {
-          console.log("Failed to fetch received emails");
-        }
-      } catch (error) {
-        console.error("Error fetching received emails", error);
-      }
-    },[dispatch,receivedId])
-
-    
-    useEffect(()=>{
-         fetchData();
-         const intervalId = setInterval(()=>{
-           fetchData()
-           console.log('hello world')
-         },2000)
-         
-         return()=>clearInterval(intervalId)
-    },[receivedId,dispatch])
-
-   
 
   const openMessage = async (emailId) => {
     const email = inboxItem.find((item) => item.id === emailId);
@@ -67,7 +53,6 @@ const Inbox = () => {
       );
 
       dispatch(inboxActions.addItems(updatedItems));
-     
 
       try {
         const res = await fetch(
@@ -85,7 +70,7 @@ const Inbox = () => {
         );
 
         if (res.ok) {
-          alert("Read msg request sent successfully");
+          console.log("Read msg request sent successfully");
         }
       } catch (error) {
         console.log(error);
