@@ -1,10 +1,15 @@
+.container {
+    margin: 0;
+    padding: 0;
+  }
+  
 .header{
     height: 3rem;
     border-bottom: 1px solid rgb(75, 75, 42);
     font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-seri;
     display: flex;
     align-items: center;
-    padding: 0 1rem
+    margin: 0;
 }
     
 .header button {
@@ -18,3 +23,9 @@
     bottom: 10px;
     transform: translate(0, 0);
   }
+
+  .leftColumn{
+    height: 100%;
+    background-color: rgb(56, 99, 99);
+  }
+  

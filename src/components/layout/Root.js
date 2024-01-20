@@ -1,47 +1,47 @@
-import { Fragment } from "react";
+import { useState } from "react";
 import Welcome from "../Pages/WelCome";
 import SideBar from "../SideBar/SideBar";
 import { Container, Row, Col, Card } from "react-bootstrap";
 import { AiFillDelete } from "react-icons/ai";
 import { RiInboxArchiveFill } from "react-icons/ri";
 import { RiSpamFill } from "react-icons/ri";
-
+import classes from './Root.module.css'
 
 const Root = (props) => {
-  return (
-    <Fragment>
-      <Welcome />
+  const [showCompose, setShowCompose] = useState(false);
 
-      <Container fluid>
-        <Card style={{background:"light gray"}}>
+  const handleShowCompose = () => {
+    setShowCompose(true);
+  };
+
+  const handleCloseCompose = () => {
+    setShowCompose(false);
+  };
+  return (
+    <Container fluid className={classes.container}>
+      <Welcome
+        showCompose={showCompose}
+        handleCloseCompose={handleCloseCompose}
+      />
+      <Row>
+        <Col xs={3} className={classes.col}>
+          <SideBar handleShowCompose={handleShowCompose} />
+        </Col>
+        <Col>
           <Card.Title>
-           
-            <div className="me-auto mt-2 mb-2" style={{marginLeft:"490px"}}>
-            <AiFillDelete/>Delete
-            <RiInboxArchiveFill />Archieve
-            <RiSpamFill />Spam
+            <div>
+              <AiFillDelete />
+              Delete
+              <RiInboxArchiveFill />
+              Archieve
+              <RiSpamFill />
+              Spam
             </div>
-            
           </Card.Title>
-        <Row>
-          <Col xs={3} >
-            <SideBar />
-          </Col>
-          <Col > 
-            <main
-              style={{
-                margin: "auto",
-                padding: "20px",
-                
-              }}
-            >
-              {props.children}
-            </main>
-          </Col>
-        </Row>
-        </Card>
-      </Container>
-    </Fragment>
+          <Card>{props.children}</Card>
+        </Col>
+      </Row>
+    </Container>
   );
 };
 

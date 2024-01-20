@@ -1,5 +1,11 @@
 import React, { useState } from "react";
-import { Button, Container, Form, InputGroup, Modal } from "react-bootstrap";
+import {
+  Button,
+  Container,
+  Form,
+  InputGroup,
+  Modal,
+} from "react-bootstrap";
 import classes from "./Welcome.module.css";
 import { authActions } from "../../store/auth-slice";
 import { useDispatch, useSelector } from "react-redux";
@@ -7,7 +13,7 @@ import { useHistory } from "react-router-dom";
 import { Editor } from "react-draft-wysiwyg";
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 
-const Welcome = () => {
+const Welcome = (props) => {
   const history = useHistory();
   const dispatch = useDispatch();
 
@@ -15,7 +21,6 @@ const Welcome = () => {
 
   const sentEmail = auth.replace(/[.@]/g, "");
 
-  const [show, setShow] = useState(false);
   const [email, setEmail] = useState("");
   const [sub, setSub] = useState("");
   const [description, setDescription] = useState("");
@@ -29,24 +34,15 @@ const Welcome = () => {
     history.replace("/");
   };
 
-  const showComposeBox = () => {
-    setShow(true);
-  };
-
-  const handleClose = () => {
-    setShow(false);
-  };
-
   const handleSend = async (event) => {
     event.preventDefault();
-    setShow(false);
+    props.handleCloseCompose();
 
     const composeEmail = {
       to: email,
       sub: sub,
       description: description,
       date: new Date(),
-     
     };
 
     console.log(composeEmail);
@@ -80,7 +76,7 @@ const Welcome = () => {
         sub: sub,
         description: description,
         date: new Date(),
-        unRead:true,
+        unRead: true,
       };
 
       const recievedEmail = email.replace(/[.@]/g, "");
@@ -112,20 +108,23 @@ const Welcome = () => {
   };
 
   return (
-    <Container fluid>
+    <Container fluid className={classes.container}>
       <header className={classes.header}>
         Welcome To Your MailBox!!!
         <Button onClick={() => logoutHandler()}>Logout</Button>
       </header>
-      <Button className="mt-3 mb-2" onClick={showComposeBox}>
-        Compose
-      </Button>
+
       <main>
         <Container className="d-flex flex-column align-items-center w-600px mt-5">
           <Modal
-            show={show}
-            onHide={handleClose}
-            style={{ marginTop: "210px", marginLeft: "700px", width: "700px" }}
+            show={props.showCompose}
+            onHide={props.handleCloseCompose}
+            backdrop="static"
+            style={{
+              marginTop: "210px",
+              marginLeft: "700px",
+              width: "700px",
+            }}
           >
             <Modal.Header
               closeButton

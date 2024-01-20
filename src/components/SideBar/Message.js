@@ -7,6 +7,7 @@ import { PiPrinterDuotone } from "react-icons/pi";
 import { IoArrowUndo } from "react-icons/io5";
 import { TiArrowRightThick } from "react-icons/ti";
 import { BsThreeDots } from "react-icons/bs";
+import classes from './Message.module.css'; 
 
 const Message = () => {
   const { emailId ,folder} = useParams();
@@ -23,14 +24,7 @@ const Message = () => {
   }
 
   return (
-    <Card
-      style={{
-        border: "solid blue",
-        display: "flex",
-        justifyContent: "space-between",
-        position: "relative",
-      }}
-    >
+    <Card className={classes.card} >
       <Row>
         <Row>
           <Col xs="10">
@@ -38,27 +32,14 @@ const Message = () => {
           </Col>
           <Col xs="2">
             <div style={{ display: "flex" }}>
-              <PiPrinterDuotone
-                style={{
-                  marginRight: "10px",
-                  cursor: "pointer",
-                  color: "lightgray",
-                  marginTop: "3px",
-                }}
-              />
+              <PiPrinterDuotone className={classes.icon} />
               <p>
                 {new Date(selectedMessage.date).toLocaleTimeString([], {
                   hour: "2-digit",
                   minute: "2-digit",
                 })}
               </p>
-              <FaStar
-                style={{
-                  marginLeft: "10px",
-                  cursor: "pointer",
-                  color: "lightgray",
-                  marginTop: "3px",
-                }}
+              <FaStar className={classes.icon}               
               />
             </div>
           </Col>

@@ -12,8 +12,7 @@ const inboxSlice = createSlice({
     reducers:{
        addItems(state,action){
         state.inboxItem=action.payload
-        state.unreadMessagesCount = action.payload.filter((email) => email.unRead).length;
-       
+         state.unreadMessagesCount = action.payload.filter((email) => email.unRead).length;  
        },
        markRead(state,action){
         const emailId = action.payload;
@@ -26,8 +25,15 @@ const inboxSlice = createSlice({
        removeMessage(state,action){
          state.inboxItem=state.inboxItem.filter((message)=>message.id !== action.payload)
          state.unreadMessagesCount -= 1;
-       }
+       },
+
+       setUnreadMessagesCount(state,action) {
+        state.unreadMessagesCount = action.payload;
+      },
+      
+       
     }
+   
 
 })
 

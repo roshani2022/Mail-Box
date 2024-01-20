@@ -1,8 +1,12 @@
-.card{
-    width: 200px;
-    background-color: cadetblue;
+.container{
+  margin: 0;
+  padding: 0;
 }
 
-.card a{
+.listGroup {
+    background-color: transparent;
+  }
+  
+  .listGroup a {
     text-decoration: none;
   }
