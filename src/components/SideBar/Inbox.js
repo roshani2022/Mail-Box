@@ -15,9 +15,6 @@ const Inbox = () => {
   const receivedId = authEmail.replace(/[.@]/g, "");
   const unreadMessagesCount = useSelector((state) => state.inbox.unreadMessagesCount);
 
-  useEffect(() => {
-    dispatch(inboxActions.addItems([]));
-  }, [receivedId, dispatch]);
 
   const { data } = useFetch(
     `https://mail-box-a393b-default-rtdb.firebaseio.com//${receivedId}/RecieveEmail.json`
@@ -70,7 +67,7 @@ const Inbox = () => {
         );
 
         if (res.ok) {
-          console.log("Read msg request sent successfully");
+          console.log("msg read successfully");
         }
       } catch (error) {
         console.log(error);

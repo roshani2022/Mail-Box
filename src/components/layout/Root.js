@@ -29,7 +29,7 @@ const Root = (props) => {
         </Col>
         <Col>
           <Card.Title>
-            <div>
+            <div className={classes.title}>
               <AiFillDelete />
               Delete
               <RiInboxArchiveFill />

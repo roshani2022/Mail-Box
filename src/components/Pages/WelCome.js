@@ -12,6 +12,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
 import { Editor } from "react-draft-wysiwyg";
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
+import { inboxActions } from "../../store/inbox-slice";
 
 const Welcome = (props) => {
   const history = useHistory();
@@ -31,6 +32,7 @@ const Welcome = (props) => {
 
   const logoutHandler = () => {
     dispatch(authActions.logout());
+    dispatch(inboxActions.addItems([]))
     history.replace("/");
   };
 

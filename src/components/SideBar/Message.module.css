@@ -20,14 +20,14 @@
   }
   
   .icon{
-    margin-right: 10px;
+    margin-right: 15px;
     cursor: pointer;
-    color: lightgray;
+    color:gray;
     margin-top: 3px;
   }
   
   .timeText {
-    margin-left: 10px;
+    margin-left: 20px;
     cursor: pointer;
     color: lightgray;
     margin-top: 3px;
