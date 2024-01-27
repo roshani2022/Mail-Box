@@ -20,7 +20,7 @@ const useFetch = (url) => {
   }, [url]);
   useEffect(() => {
     fetchEmail();
-  }, [fetchEmail]);
+  }, [fetchEmail,url]);
   return { data,error,fetchEmail };
 };
 

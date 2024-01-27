@@ -1,5 +1,5 @@
 import { useState } from "react";
-import Welcome from "../Pages/WelCome";
+import Welcome from "../header/WelCome";
 import SideBar from "../SideBar/SideBar";
 import { Container, Row, Col, Card } from "react-bootstrap";
 import { AiFillDelete } from "react-icons/ai";

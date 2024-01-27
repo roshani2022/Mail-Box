@@ -7,17 +7,16 @@ import { PiPrinterDuotone } from "react-icons/pi";
 import { IoArrowUndo } from "react-icons/io5";
 import { TiArrowRightThick } from "react-icons/ti";
 import { BsThreeDots } from "react-icons/bs";
-import classes from "./Message.module.css";
+import classes from "./ReceiveMessageDetail.module.css";
 
-const Message = () => {
-  const { mails,emailId} = useParams();
+const ReceiveMessageDetail = () => {
+  const { id } = useParams();
   const inboxMessages = useSelector((state) => state.inbox.inboxItem);
-  const sentMessages = useSelector((state) => state.sent.sentItem);
 
-  const selectedMessage =
-    mails === "inbox"
-      ? inboxMessages.find((message) => message.id === emailId)
-      : sentMessages.find((message) => message.id === emailId);
+  console.log(inboxMessages)
+
+  const selectedMessage = inboxMessages.find((message) => message.id === id)
+console.log(selectedMessage)
 
   if (!selectedMessage) {
     return <p>Loading...</p>;
@@ -29,12 +28,7 @@ const Message = () => {
         <Row>
           <Col xs="10">
             <h3>{selectedMessage.sub}</h3>
-
-            {mails === "inbox" ? (
-              <p>From:{selectedMessage.from}</p>
-            ) : (
-              <p>To:{selectedMessage.to}</p>
-            )}
+            <p>From:{selectedMessage.from}</p>
           </Col>
           <Col xs="2">
             <div style={{ display: "flex" }}>
@@ -77,4 +71,4 @@ const Message = () => {
   );
 };
 
-export default Message;
+export default ReceiveMessageDetail;

@@ -37,7 +37,7 @@ const SentMail = () => {
 
   const openMessage = async (emailId) => {
     
-    history.replace(`/Message/:folder/${emailId}`);
+    history.replace(`/sent/${emailId}`);
   };
 
   const deleteMessage = async (emailId) => {

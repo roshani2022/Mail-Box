@@ -7,17 +7,12 @@ import { PiPrinterDuotone } from "react-icons/pi";
 import { IoArrowUndo } from "react-icons/io5";
 import { TiArrowRightThick } from "react-icons/ti";
 import { BsThreeDots } from "react-icons/bs";
-import classes from "./Message.module.css";
+import classes from "./SentMessageDetail.module.css";
 
-const Message = () => {
-  const { mails,emailId} = useParams();
-  const inboxMessages = useSelector((state) => state.inbox.inboxItem);
+const SentMessageDetail = () => {
+  const { id } = useParams();
   const sentMessages = useSelector((state) => state.sent.sentItem);
-
-  const selectedMessage =
-    mails === "inbox"
-      ? inboxMessages.find((message) => message.id === emailId)
-      : sentMessages.find((message) => message.id === emailId);
+  const selectedMessage = sentMessages.find((message) => message.id === id);
 
   if (!selectedMessage) {
     return <p>Loading...</p>;
@@ -29,12 +24,7 @@ const Message = () => {
         <Row>
           <Col xs="10">
             <h3>{selectedMessage.sub}</h3>
-
-            {mails === "inbox" ? (
-              <p>From:{selectedMessage.from}</p>
-            ) : (
-              <p>To:{selectedMessage.to}</p>
-            )}
+            <p>To:{selectedMessage.to}</p>
           </Col>
           <Col xs="2">
             <div style={{ display: "flex" }}>
@@ -77,4 +67,4 @@ const Message = () => {
   );
 };
 
-export default Message;
+export default SentMessageDetail;

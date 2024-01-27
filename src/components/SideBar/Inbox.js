@@ -1,4 +1,4 @@
-import React, { useEffect} from "react";
+import React, { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { inboxActions } from "../../store/inbox-slice";
 import { Table, Form } from "react-bootstrap";
@@ -13,12 +13,15 @@ const Inbox = () => {
   const dispatch = useDispatch();
   const authEmail = useSelector((state) => state.auth.email);
   const receivedId = authEmail.replace(/[.@]/g, "");
-  const unreadMessagesCount = useSelector((state) => state.inbox.unreadMessagesCount);
+  let unreadMessagesCount = useSelector(
+    (state) => state.inbox.unreadMessagesCount
+  );
 
-
+  
   const { data } = useFetch(
     `https://mail-box-a393b-default-rtdb.firebaseio.com//${receivedId}/RecieveEmail.json`
   );
+
 
   useEffect(() => {
     if (data) {
@@ -27,30 +30,25 @@ const Inbox = () => {
         ...innerData,
       }));
 
-      const intervalId = setInterval(() => {
-        dispatch(inboxActions.addItems(items));
-      
-      }, 2000);
+      dispatch(inboxActions.addItems(items));
 
-      return () => clearInterval(intervalId);
+      // const intervalId = setInterval(() => {
+      //   dispatch(inboxActions.addItems(items));
+      // }, 2000);
+
+      // return () => clearInterval(intervalId);
     } else {
       alert("Failed to fetch recieve Email");
     }
-  }, [data, dispatch,unreadMessagesCount]);
+  }, [data, dispatch, unreadMessagesCount]);
 
+
+ 
   
-
   const openMessage = async (emailId) => {
+    dispatch(inboxActions.markRead(emailId));
     const email = inboxItem.find((item) => item.id === emailId);
-    console.log(email);
-
     if (email && email.unRead) {
-      const updatedItems = inboxItem.map((item) =>
-        item.id === emailId ? { ...item, unRead: false } : item
-      );
-
-      dispatch(inboxActions.addItems(updatedItems));
-
       try {
         const res = await fetch(
           `https://mail-box-a393b-default-rtdb.firebaseio.com//${receivedId}/RecieveEmail/${emailId}.json`,
@@ -73,8 +71,7 @@ const Inbox = () => {
         console.log(error);
       }
     }
-
-    history.replace(`/Message/inbox/${emailId}`);
+    history.replace(`/receive/${emailId}`);
   };
 
   const deleteMessage = async (emailId) => {
@@ -91,7 +88,7 @@ const Inbox = () => {
       if (res.ok) {
         alert("Email deleted successfully");
       } else {
-        throw new Error("Failed to delete expense");
+        throw new Error("Failed to delete email");
       }
     } catch (error) {
       console.error("Error deleting email", error);
@@ -135,3 +132,6 @@ const Inbox = () => {
 };
 
 export default Inbox;
+
+
+
