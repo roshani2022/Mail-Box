@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { inboxActions } from "../../store/inbox-slice";
 import { Table, Form } from "react-bootstrap";
@@ -13,15 +13,11 @@ const Inbox = () => {
   const dispatch = useDispatch();
   const authEmail = useSelector((state) => state.auth.email);
   const receivedId = authEmail.replace(/[.@]/g, "");
-  let unreadMessagesCount = useSelector(
-    (state) => state.inbox.unreadMessagesCount
-  );
+  const [fetchIntervalId, setFetchIntervalId] = useState(null);
 
-  
   const { data } = useFetch(
     `https://mail-box-a393b-default-rtdb.firebaseio.com//${receivedId}/RecieveEmail.json`
   );
-
 
   useEffect(() => {
     if (data) {
@@ -29,24 +25,70 @@ const Inbox = () => {
         id,
         ...innerData,
       }));
-
       dispatch(inboxActions.addItems(items));
-
-      // const intervalId = setInterval(() => {
-      //   dispatch(inboxActions.addItems(items));
-      // }, 2000);
-
-      // return () => clearInterval(intervalId);
     } else {
-      alert("Failed to fetch recieve Email");
+      alert("Failed to fetch receive Email");
     }
-  }, [data, dispatch, unreadMessagesCount]);
 
+    // Clear interval when component unmounts or when data changes
+    return () => {
+      if (fetchIntervalId) {
+        clearInterval(fetchIntervalId);
+      }
+    };
+  }, [data, dispatch, fetchIntervalId]);
+
+
+  useEffect(() => {
+    // Start fetching data every 8 seconds
+    const intervalId = setInterval(() => {
+      fetchData();
+    }, 8000);
+
+    setFetchIntervalId(intervalId);
+
+    // Clear interval when component unmounts
+    return () => clearInterval(intervalId);
+  }, []);
+
+  const fetchData = useCallback(() => {
+    if (data) {
+      const items = Object.entries(data).map(([id, innerData]) => ({
+        id,
+        ...innerData,
+      }));
+      dispatch(inboxActions.addItems(items));
+    } else {
+      alert("Failed to fetch receive Email");
+    }
+  }, [data, dispatch]);
 
  
-  
+
+  const deleteMessage = async (emailId) => {
+    dispatch(inboxActions.removeMessage(emailId));
+
+    try {
+      const res = await fetch(
+        `https://mail-box-a393b-default-rtdb.firebaseio.com//${receivedId}/RecieveEmail/${emailId}.json`,
+        {
+          method: "DELETE",
+        }
+      );
+
+      if (res.ok) {
+        alert("Email deleted successfully");
+      } else {
+        throw new Error("Failed to delete email");
+      }
+    } catch (error) {
+      console.error("Error deleting email", error);
+    }
+  };
+
   const openMessage = async (emailId) => {
     dispatch(inboxActions.markRead(emailId));
+
     const email = inboxItem.find((item) => item.id === emailId);
     if (email && email.unRead) {
       try {
@@ -71,28 +113,8 @@ const Inbox = () => {
         console.log(error);
       }
     }
-    history.replace(`/receive/${emailId}`);
-  };
 
-  const deleteMessage = async (emailId) => {
-    dispatch(inboxActions.removeMessage(emailId));
-
-    try {
-      const res = await fetch(
-        `https://mail-box-a393b-default-rtdb.firebaseio.com//${receivedId}/RecieveEmail/${emailId}.json`,
-        {
-          method: "DELETE",
-        }
-      );
-
-      if (res.ok) {
-        alert("Email deleted successfully");
-      } else {
-        throw new Error("Failed to delete email");
-      }
-    } catch (error) {
-      console.error("Error deleting email", error);
-    }
+    history.replace(`/mymail/receive/${emailId}`);
   };
 
   return (
@@ -117,12 +139,10 @@ const Inbox = () => {
               })}
             </td>
             <td>
-              {
-                <MdDelete
-                  onClick={() => deleteMessage(email.id)}
-                  style={{ fontSize: "25px" }}
-                />
-              }
+              <MdDelete
+                onClick={() => deleteMessage(email.id)}
+                style={{ fontSize: "25px", cursor: "pointer" }}
+              />
             </td>
           </tr>
         ))}
@@ -132,6 +152,3 @@ const Inbox = () => {
 };
 
 export default Inbox;
-
-
-

@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useCallback, useEffect } from "react";
 import { ListGroup, Badge, Button, Container } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import classes from "./SideBar.module.css";
@@ -14,12 +14,14 @@ const SideBar = (props) => {
   const unreadMessagesCount = useSelector(
     (state) => state.inbox.unreadMessagesCount
   );
+ 
 
   const { data } = useFetch(
     `https://mail-box-a393b-default-rtdb.firebaseio.com//${receivedId}/RecieveEmail.json`
   );
-
-  useEffect(() => {
+  
+const fetchData = useCallback(()=>{
+    const fetchEmail = async() => {
     if (data) {
       const items = Object.entries(data).map(([id, innerData]) => ({
         id,
@@ -28,15 +30,17 @@ const SideBar = (props) => {
 
       dispatch(inboxActions.addItems(items));
 
-      // const intervalId = setInterval(() => {
-      //   dispatch(inboxActions.addItems(items));
-      // }, 2000);
-
-      // return () => clearInterval(intervalId);
+    
     } else {
       alert("Failed to fetch recieve Email");
     }
-  }, [data, dispatch, unreadMessagesCount]);
+  };
+   fetchEmail()
+},[data,dispatch])
+
+useEffect(()=>{
+  fetchData()
+},[fetchData])
 
   return (
     <Container className={classes.container}>
@@ -89,3 +93,5 @@ const SideBar = (props) => {
 };
 
 export default SideBar;
+
+
