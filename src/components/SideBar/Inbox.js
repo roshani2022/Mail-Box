@@ -39,18 +39,7 @@ const Inbox = () => {
   }, [data, dispatch, fetchIntervalId]);
 
 
-  useEffect(() => {
-    // Start fetching data every 8 seconds
-    const intervalId = setInterval(() => {
-      fetchData();
-    }, 8000);
-
-    setFetchIntervalId(intervalId);
-
-    // Clear interval when component unmounts
-    return () => clearInterval(intervalId);
-  }, []);
-
+ 
   const fetchData = useCallback(() => {
     if (data) {
       const items = Object.entries(data).map(([id, innerData]) => ({
@@ -63,7 +52,18 @@ const Inbox = () => {
     }
   }, [data, dispatch]);
 
- 
+  useEffect(() => {
+    // Start fetching data every 8 seconds
+    const intervalId = setInterval(() => {
+      fetchData();
+    }, 8000);
+
+    setFetchIntervalId(intervalId);
+
+    // Clear interval when component unmounts
+    return () => clearInterval(intervalId);
+  }, [fetchData]);
+
 
   const deleteMessage = async (emailId) => {
     dispatch(inboxActions.removeMessage(emailId));

@@ -122,7 +122,8 @@ const Auth = () => {
         </Form>
       </Card>
       <Button className="mt-3" onClick={switchAuthModeHandler}>
-        {isLogin ? "Have an account?Login" : "Dont Have an account?Signup"}
+        {/* {isLogin ? "Have an account?Login" : "Dont Have an account?Signup"} */}
+        {isLogin ? "Don't Have an account?Signup" : " Have an account?Login"}
       </Button>
     </Container>
   );
