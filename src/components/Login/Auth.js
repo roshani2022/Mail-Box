@@ -1,25 +1,42 @@
-import React, { useRef} from "react";
-import { Form, Card, FloatingLabel, Button,Container } from "react-bootstrap";
+import React, { useRef, useState } from "react";
+import { IoMdEye, IoMdEyeOff } from "react-icons/io";
+import {
+  Form,
+  Card,
+  FloatingLabel,
+  Button,
+  Container,
+  Row,
+  Col,
+} from "react-bootstrap";
 import { useHistory } from "react-router-dom";
-import classes from "./Auth.module.css";
-import { useDispatch ,useSelector} from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { authActions } from "../../store/auth-slice";
 
-
 const Auth = () => {
-  const isLogin = useSelector(state=>state.auth.isAuthenticated)
+  const isLogin = useSelector((state) => state.auth.isAuthenticated);
 
-  console.log(isLogin)
+  console.log(isLogin);
   const history = useHistory();
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
 
   const emailRef = useRef();
   const passwordRef = useRef();
   const confirmPasswordRef = useRef();
 
-  
+  const [showPassword, setShowPassword] = useState(false);
+  const [confirmShowPassword, setConfirmShowPassword] = useState(false);
+
+  const togglePasswordVisibility = () => {
+    setShowPassword((prevState) => !prevState);
+  };
+
+  const toggleConfirmPasswordVisibility = () => {
+    setConfirmShowPassword((prevState) => !prevState);
+  };
+
   const switchAuthModeHandler = () => {
-   dispatch(authActions.setLogin())
+    dispatch(authActions.setLogin());
   };
 
   const submitHandler = async (event) => {
@@ -64,8 +81,8 @@ const Auth = () => {
 
       if (isLogin) {
         const data = await res.json();
-        console.log(data)
-        dispatch(authActions.login( {idToken: data.idToken,email:email}));
+        console.log(data);
+        dispatch(authActions.login({ idToken: data.idToken, email: email }));
         history.replace("/welcome");
         console.log("Login Sucessfully");
       } else {
@@ -76,55 +93,105 @@ const Auth = () => {
       console.log("Error during authentication:", error);
       alert(error.message);
     }
-
-  
   };
 
   return (
-    <Container  className="d-flex flex-column align-items-center mt-5">
-      <Card className={classes.card}>
-        <h1 className="text-center mb-4"> {isLogin ? "Login" : "Signup"}</h1>
-        <Form className={classes.form} onSubmit={submitHandler}>
-          <FloatingLabel controlId="floatingInput" label="Email address">
-            <Form.Control
-              type="email"
-              placeholder="name@example.com"
-              required
-              ref={emailRef}
-            />
-          </FloatingLabel>
-          <FloatingLabel controlId="floatingPassword" label="Password">
-            <Form.Control
-              type="password"
-              placeholder="Password"
-              required
-              ref={passwordRef}
-            />
-          </FloatingLabel>
-          {!isLogin ? (
-            <FloatingLabel
-              controlId="floatingConfirmPassword"
-              label="ConfirmPassword"
-            >
-              <Form.Control
-                type="password"
-                placeholder="ConfirmPassword"
-                required
-                ref={confirmPasswordRef}
-              />
-            </FloatingLabel>
-          ) : (
-            ""
-          )}
+    <Container className="d-flex flex-column align-items-center mt-5 mx-auto">
+      <Row className="justify-content-center w-100">
+        <Col xs={12} md={8} lg={6}>
+          <Card
+            className="d-flex flex-column p-4 shadow-sm mb-4"
+            style={{ width: "25rem" }}
+          >
+            <h1 className="text-center mb-4">
+              {" "}
+              {isLogin ? "Login" : "Signup"}
+            </h1>
+            <Form className="d-flex flex-column" onSubmit={submitHandler}>
+              <FloatingLabel
+                controlId="floatingInput"
+                label="Email address"
+                className="mb-4"
+              >
+                <Form.Control
+                  type="email"
+                  placeholder="name@example.com"
+                  required
+                  ref={emailRef}
+                />
+              </FloatingLabel>
+              <FloatingLabel
+                controlId="floatingPassword"
+                label="Password"
+                className="mb-4"
+              >
+                <Form.Control
+                  type={showPassword ? "text" : "password"}
+                  placeholder="Password"
+                  required
+                  ref={passwordRef}
+                />
+                <Button
+                  variant="light"
+                  onClick={togglePasswordVisibility}
+                  className="password-toggle-btn"
+                  style={{
+                    position: "absolute",
+                    right: "10px",
+                    top: "50%",
+                    transform: "translateY(-50%)",
+                    backgroundColor: "transparent",
+                    border: "none",
+                  }}
+                >
+                  {showPassword ? <IoMdEyeOff /> : <IoMdEye />}
+                </Button>
+              </FloatingLabel>
+              {!isLogin ? (
+                <FloatingLabel
+                  controlId="floatingConfirmPassword"
+                  label="ConfirmPassword"
+                   className="mb-4"
+                >
+                  <Form.Control
+                    type={confirmShowPassword ? "text" : "password"}
+                    placeholder="ConfirmPassword"
+                    required
+                    ref={confirmPasswordRef}
+                  />
+                  <Button
+                    variant="light"
+                    onClick={toggleConfirmPasswordVisibility}
+                    className="password-toggle-btn"
+                    style={{
+                      position: "absolute",
+                      right: "10px",
+                      top: "50%",
+                      transform: "translateY(-50%)",
+                      backgroundColor: "transparent",
+                      border: "none",
+                    }}
+                  >
+                    {confirmShowPassword ? <IoMdEyeOff /> : <IoMdEye />}
+                  </Button>
+                </FloatingLabel>
+              ) : (
+                ""
+              )}
 
-          <Button type="submit">{isLogin ? "Login" : "SignUp"}</Button>
-          {isLogin ? <Button variant="Link">Forget Password</Button> : ""}
-        </Form>
-      </Card>
-      <Button className="mt-3" onClick={switchAuthModeHandler}>
-        {/* {isLogin ? "Have an account?Login" : "Dont Have an account?Signup"} */}
-        {isLogin ? "Don't Have an account?Signup" : " Have an account?Login"}
-      </Button>
+              <Button type="submit">{isLogin ? "Login" : "SignUp"}</Button>
+              {isLogin ? <Button variant="Link">Forget Password</Button> : ""}
+            </Form>
+          </Card>
+
+          <Button className="w-50" onClick={switchAuthModeHandler}  style={{ marginLeft: "50px" }}>
+            {/* {isLogin ? "Have an account?Login" : "Dont Have an account?Signup"} */}
+            {isLogin
+              ? "Don't Have an account?Signup"
+              : " Have an account?Login"}
+          </Button>
+        </Col>
+      </Row>
     </Container>
   );
 };

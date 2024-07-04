@@ -45,7 +45,7 @@ useEffect(()=>{
   return (
     <Container className={classes.container}>
       <Button
-        className="mt-3 mb-4 ms-5 w-120"
+        className="mt-3 mb-4 ms-3 w-120"
         size="lg"
         onClick={props.handleShowCompose}
       >

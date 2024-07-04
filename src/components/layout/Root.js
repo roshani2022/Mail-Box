@@ -1,11 +1,9 @@
 import { useState } from "react";
-import Welcome from "../header/WelCome";
+import Welcome from "../Welcome/WelCome";
 import SideBar from "../SideBar/SideBar";
-import { Container, Row, Col, Card } from "react-bootstrap";
+import { Row, Col, Card, Button } from "react-bootstrap";
 import { AiFillDelete } from "react-icons/ai";
-import { RiInboxArchiveFill } from "react-icons/ri";
-import { RiSpamFill } from "react-icons/ri";
-import classes from './Root.module.css'
+import { RiInboxArchiveFill, RiSpamFill } from "react-icons/ri";
 
 const Root = (props) => {
   const [showCompose, setShowCompose] = useState(false);
@@ -18,30 +16,40 @@ const Root = (props) => {
     setShowCompose(false);
   };
   return (
-    <Container fluid className={classes.container}>
+    <>
       <Welcome
         showCompose={showCompose}
         handleCloseCompose={handleCloseCompose}
       />
-      <Row>
-        <Col xs={3} className={classes.col}>
-          <SideBar handleShowCompose={handleShowCompose} />
-        </Col>
-        <Col>
-          <Card.Title>
-            <div className={classes.title}>
-              <AiFillDelete />
-              Delete
-              <RiInboxArchiveFill />
-              Archieve
-              <RiSpamFill />
-              Spam
-            </div>
-          </Card.Title>
-          <Card>{props.children}</Card>
-        </Col>
-      </Row>
-    </Container>
+      <div className="mt-3">
+        <Row>
+          <Col xs={12} md={3} className="bg-light min-vh-100">
+            <SideBar handleShowCompose={handleShowCompose} />
+          </Col>
+          <Col xs={12} md={9} className="p-3">
+            <Card className="mb-3">
+              <Card.Body>
+                <div className="d-flex flex-wrap justify-content-between mb-3">
+                  <Button variant="light" className="mb-2">
+                    <AiFillDelete className="me-1" />
+                    Delete
+                  </Button>
+                  <Button variant="light" className="mb-2">
+                    <RiInboxArchiveFill className="me-1" />
+                    Archive
+                  </Button>
+                  <Button variant="light" className="mb-2">
+                    <RiSpamFill className="me-1" />
+                    Spam
+                  </Button>
+                </div>
+                {props.children}
+              </Card.Body>
+            </Card>
+          </Col>
+        </Row>
+      </div>
+    </>
   );
 };
 
